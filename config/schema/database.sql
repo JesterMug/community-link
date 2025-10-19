@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 19, 2025 at 01:43 AM
+-- Generation Time: Oct 19, 2025 at 01:59 AM
 -- Server version: 9.4.0
 -- PHP Version: 8.4.13
 
@@ -97,10 +97,10 @@ CREATE TABLE `event_skill` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `industry`
+-- Table structure for table `industries`
 --
 
-CREATE TABLE `industry` (
+CREATE TABLE `industries` (
   `id` int NOT NULL,
   `name` varchar(127) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -163,10 +163,10 @@ CREATE TABLE `skills` (
 CREATE TABLE `users` (
   `id` int NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `nonce` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `nonce_expiry` datetime DEFAULT NULL,
-  `role` enum('admin','volunteer') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'volunteer',
+  `role` enum('admin','volunteer','assistant') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `volunteer_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -252,20 +252,20 @@ ALTER TABLE `events`
 -- Indexes for table `event_equipment`
 --
 ALTER TABLE `event_equipment`
-  ADD KEY `fk_events_equipments` (`event_id`),
+  ADD PRIMARY KEY (`event_id`,`equipment_id`) USING BTREE,
   ADD KEY `fk_equipments_events` (`equipment_id`);
 
 --
 -- Indexes for table `event_skill`
 --
 ALTER TABLE `event_skill`
-  ADD KEY `fk_events_skills` (`event_id`),
+  ADD PRIMARY KEY (`event_id`,`skill_id`),
   ADD KEY `fk_skills_events` (`skill_id`);
 
 --
--- Indexes for table `industry`
+-- Indexes for table `industries`
 --
-ALTER TABLE `industry`
+ALTER TABLE `industries`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -278,14 +278,14 @@ ALTER TABLE `partner_organisations`
 -- Indexes for table `partner_organisation_equipment`
 --
 ALTER TABLE `partner_organisation_equipment`
-  ADD KEY `fk_partner_organisations_equipments` (`partner_organisation_id`),
+  ADD PRIMARY KEY (`partner_organisation_id`,`equipment_id`),
   ADD KEY `fk_equipments_partner_organisations` (`equipment_id`);
 
 --
 -- Indexes for table `partner_organisation_industry`
 --
 ALTER TABLE `partner_organisation_industry`
-  ADD KEY `fk_partner_organisations_industry` (`partner_organisation_id`),
+  ADD PRIMARY KEY (`partner_organisation_id`,`industry_id`),
   ADD KEY `fk_industry_partner_organisations` (`industry_id`);
 
 --
@@ -318,14 +318,14 @@ ALTER TABLE `volunteer_availability`
 -- Indexes for table `volunteer_event`
 --
 ALTER TABLE `volunteer_event`
-  ADD KEY `fk_volunteers_events` (`volunteer_id`),
+  ADD PRIMARY KEY (`volunteer_id`,`event_id`),
   ADD KEY `fk_events_volunteers` (`event_id`);
 
 --
 -- Indexes for table `volunteer_skill`
 --
 ALTER TABLE `volunteer_skill`
-  ADD KEY `fk_volunteers_skills` (`volunteer_id`),
+  ADD PRIMARY KEY (`volunteer_id`,`skill_id`),
   ADD KEY `fk_skills_volunteers` (`skill_id`);
 
 --
@@ -351,9 +351,9 @@ ALTER TABLE `events`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `industry`
+-- AUTO_INCREMENT for table `industries`
 --
-ALTER TABLE `industry`
+ALTER TABLE `industries`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -421,7 +421,7 @@ ALTER TABLE `partner_organisation_equipment`
 -- Constraints for table `partner_organisation_industry`
 --
 ALTER TABLE `partner_organisation_industry`
-  ADD CONSTRAINT `fk_industry_partner_organisations` FOREIGN KEY (`industry_id`) REFERENCES `industry` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_industry_partner_organisations` FOREIGN KEY (`industry_id`) REFERENCES `industries` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_partner_organisations_industry` FOREIGN KEY (`partner_organisation_id`) REFERENCES `partner_organisations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
