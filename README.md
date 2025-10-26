@@ -1,3 +1,18 @@
+# Work breakdown structure
+## Hakeem 
+- Dashboard Page
+- View details of Partner Organisation, Volunteers, Events
+- User account management
+- Publicly available pages
+
+## Jag
+- Search for various data
+- Contact us
+- Contact us page & record management
+- Authentication
+
+
+
 # CakePHP Application Skeleton
 
 ![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=5.x)
